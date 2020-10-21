@@ -13,9 +13,12 @@ import tkinter as tk
 from datetime import datetime
 import pandas as pd
 from PIL import ImageTk,Image
-       
+from platform import system
+      
 
-
+def close_all():
+    pass
+    ## have it submit to a temp file for recovery....
 
 def submit_to_full():
     print('start')
@@ -46,7 +49,19 @@ def temp_writer(info):
     df = df.append(app_series, ignore_index = True)
     df.to_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_temp.csv', index = False)
 
-
+class App_Close_Overide(tk.Frame):
+    def __init__(self,parent):
+        super(App_Close_Overide,self).__init__(parent)
+        
+        
+        self.close_label= tk.Label(self, text = "would you like to save to the excel file?")
+        self.close_label.grod(row = 2, column = 3)
+        
+        self.button_yes = tk.Button(text = 'Yes', command = submit_to_full())
+        self.button_yes.grid(row = 5, column =4, padx = 10)
+        
+        self.button_no = tk.Button(text = 'Yes', command = close_all())
+        self.button_no.grid(row = 5, column =5, padx = 10)
 
 
 class App_Main_Window(tk.Frame):
@@ -217,7 +232,10 @@ if __name__ == "__main__":
     root.title("Offensive Stats Platform  v0.0.1 Pre-Alpha")
     canvas = tk.Canvas(root, width = 150, height = 150)  
     canvas.grid(row=0)  
-    img = ImageTk.PhotoImage(Image.open(r"C:\Users\joedattoli\Documents\GitHub\radialdefensivechart\main_logo.png"))  
+    if (system() == 'Darwin'):
+        img = ImageTk.PhotoImage(Image.open(r'/Users/joedattoli/Documents/GitHub/BB_SCOREBOOK_CSVINPUT_HELPER/main_logo.png'))  
+    elif(system() == 'Windows'):
+        img = ImageTk.PhotoImage(Image.open(r"C:\Users\joedattoli\Documents\GitHub\radialdefensivechart\main_logo.png"))  
     canvas.create_image(75, 75, image=img) 
     app = App_Main_Window(root)
     app.grid(row =1)
