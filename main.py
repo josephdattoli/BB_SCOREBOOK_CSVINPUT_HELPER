@@ -27,6 +27,11 @@ def submit_to_full():
     print('finish')    
 
 def temp_writer(info):
+    for i in range(1,len(info)):
+        if (info[i] == ''):
+            info[i] = 0
+        else:
+            info[i] = int(info[i])
     
     app_dict = {'Player': info[0],'PA': info[1], 'AB': info[2], 'R': info[3], '1B': info[4],'2B': info[5], '3B': info[6],'HR': info[7],
                 'BB': info[8],'HBP': info[9],'KL': info[10],'KS': info[11],'SB': info[12],'CS': info[13],'RBI': info[14],'SAC_BUNT': info[15],
@@ -36,7 +41,7 @@ def temp_writer(info):
     
     app_series = pd.Series(app_dict)
     #print(app_series)
-    df = pd.read_csv(r'C:\Users\joedattoli\Documents\GitHub\radialdefensivechart\temp.csv' )
+    df = pd.read_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_temp.csv' )
     #print(df)
     df = df.append(app_series, ignore_index = True)
     df.to_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_temp.csv', index = False)
@@ -94,7 +99,7 @@ class App_Main_Window(tk.Frame):
         self.HHB_label.grid(row=5,column=5,padx=3)  
         self.PITCHES_label.grid(row=7,column=1,padx=3)
         self.STRIKES_label.grid(row=7,column=2,padx=3)
-        self.TOT_SWINGS_label.grid(row=3,column=3,padx=3) 
+        self.TOT_SWINGS_label.grid(row=7,column=3,padx=3) 
         
         self.NAME_var = tk.StringVar()
         self.PA_var =  tk.StringVar()
@@ -169,46 +174,47 @@ class App_Main_Window(tk.Frame):
         self.STRIKES_entry.grid(row=8,column=2,padx=3)
         self.TOT_SWINGS_entry.grid(row=8, column=3,padx=3)  
         
+        self.submit_button =tk.Button(self, command = self.submit_choices, text = 'Submit Stats')
+        self.submit_button.grid(row=8,column=6)
         
+    def submit_choices(self):
+        temp_writer(self.get_all())
+        self.NAME_entry.delete(0 , tk.END)
+        self.PA_entry.delete(0 , tk.END)
+        self.AB_entry.delete(0 , tk.END)
+        self.R_entry.delete(0 , tk.END)
+        self.SINGLE_entry.delete(0 , tk.END)
+        self.DOUBLE_entry.delete(0 , tk.END)
+        self.TRIPLE_entry.delete(0 , tk.END)
+        self.HR_entry.delete(0 , tk.END)
+        self.BB_entry.delete(0 , tk.END)
+        self.HBP_entry.delete(0 , tk.END)
+        self.KL_entry.delete(0 , tk.END)
+        self.KS_entry.delete(0 , tk.END)
+        self.SB_entry.delete(0 , tk.END)
+        self.CS_entry.delete(0 , tk.END)
+        self.RBI_entry.delete(0 , tk.END)
+        self.SAC_entry.delete(0 , tk.END)
+        self.SACFLY_entry.delete(0 , tk.END)
+        self.DP_entry.delete(0 , tk.END)
+        self.QUAB_entry.delete(0 , tk.END)
+        self.HHB_entry.delete(0 , tk.END)
+        self.PITCHES_entry.delete(0 , tk.END)
+        self.STRIKES_entry.delete(0 , tk.END)
+        self.TOT_SWINGS_entry.delete(0 , tk.END)
         
-def submit_choices(self):
-    temp_writer(get_all(self))
-    self.NAME_var = tk.StringVar()
-    self.PA_var =  tk.StringVar()
-    self.AB_var = tk.StringVar()
-    self.R_var =  tk.StringVar()
-    self.SINGLE_var = tk.StringVar()
-    self.DOUBLE_var = tk.StringVar()
-    self.TRIPLE_var = tk.StringVar()
-    self.HR_var =  tk.StringVar()
-    self.BB_var =  tk.StringVar()
-    self.HBP_var =  tk.StringVar()
-    self.KL_var =  tk.StringVar()
-    self.KS_var =  tk.StringVar()
-    self.SB_var =  tk.StringVar()
-    self.CS_var =  tk.StringVar()
-    self.RBI_var =  tk.StringVar()
-    self.SAC_var =  tk.StringVar()
-    self.SACFLY_var =  tk.StringVar()
-    self.DP_var =  tk.StringVar()
-    self.QUAB_var =  tk.StringVar()
-    self.HHB_var =  tk.StringVar()
-    self.PITCHES_var =  tk.StringVar()
-    self.STRIKES_var =  tk.StringVar()
-    self.TOT_SWINGS_var = tk.StringVar()
-    
-        
-def get_all(self):
-    return[self.NAME_var.get(),self.PA_var.get(),self.AB_var.get(),self.R_var.get(),self.SINGLE_var.get(),self.DOUBLE_var.get(),
-           self.TRIPLE_var.get(),self.HR_var.get(), self.BB_var.get(), self.HBP_var.get(), self.KL_var.get(), self.KS_var.get(),
-           self.SB_var.get(), self.CS_var.get(), self.RBI_var.get(), self.SAC_var.get(), self.SACFLY_var.get(), self.DP_var.get(),
-           self.QUAB_var.get(), self.HHB_var.get(), self.PITCHES_var.get(), self.STRIKES_var.get(), self.TOT_SWINGS_var.get()]
+            
+    def get_all(self):
+        return[self.NAME_var.get(),self.PA_var.get(),self.AB_var.get(),self.R_var.get(),self.SINGLE_var.get(),self.DOUBLE_var.get(),
+               self.TRIPLE_var.get(),self.HR_var.get(), self.BB_var.get(), self.HBP_var.get(), self.KL_var.get(), self.KS_var.get(),
+               self.SB_var.get(), self.CS_var.get(), self.RBI_var.get(), self.SAC_var.get(), self.SACFLY_var.get(), self.DP_var.get(),
+               self.QUAB_var.get(), self.HHB_var.get(), self.PITCHES_var.get(), self.STRIKES_var.get(), self.TOT_SWINGS_var.get()]
     
         
 if __name__ == "__main__":  
     
     root = tk.Tk()
-    root.title("Defensive Chart  v0.0.1 Pre-Alpha")
+    root.title("Offensive Stats Platform  v0.0.1 Pre-Alpha")
     canvas = tk.Canvas(root, width = 150, height = 150)  
     canvas.grid(row=0)  
     img = ImageTk.PhotoImage(Image.open(r"C:\Users\joedattoli\Documents\GitHub\radialdefensivechart\main_logo.png"))  
