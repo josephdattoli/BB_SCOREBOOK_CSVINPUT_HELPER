@@ -10,24 +10,36 @@ Created on Fri Oct  2 21:24:37 2020
 @author: joedattoli
 """
 import tkinter as tk
-from datetime import datetime
+from time import sleep
 import pandas as pd
 from PIL import ImageTk,Image
 from platform import system
       
-
+def on_exit():
+    vari = tk.messagebox.askyesno('WARNING','Do you want to save all before closing?')
+    if (vari  == True):
+        submit_to_full()
+      
+        tk.messagebox.showinfo('Complete', 'SAVING COMPLETE')
+        sleep(2)
+        root.destroy()
+    else:
+        root.destroy()
+        
+        
+        
 def close_all():
     pass
     ## have it submit to a temp file for recovery....
 
 def submit_to_full():
-    print('start')
+   
     df_full = pd.read_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_full.csv')
     df_temp = pd.read_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_temp.csv')
     
     df_full = df_full.append(df_temp, ignore_index = True)
     df_full.to_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_full.csv', index = False)
-    print('finish')    
+
 
 def temp_writer(info):
     for i in range(1,len(info)):
@@ -48,21 +60,10 @@ def temp_writer(info):
     #print(df)
     df = df.append(app_series, ignore_index = True)
     df.to_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_temp.csv', index = False)
+    
 
-class App_Close_Overide(tk.Frame):
-    def __init__(self,parent):
-        super(App_Close_Overide,self).__init__(parent)
-        
-        
-        self.close_label= tk.Label(self, text = "would you like to save to the excel file?")
-        self.close_label.grod(row = 2, column = 3)
-        
-        self.button_yes = tk.Button(text = 'Yes', command = submit_to_full())
-        self.button_yes.grid(row = 5, column =4, padx = 10)
-        
-        self.button_no = tk.Button(text = 'Yes', command = close_all())
-        self.button_no.grid(row = 5, column =5, padx = 10)
 
+        
 
 class App_Main_Window(tk.Frame):
     def __init__(self,parent):
@@ -192,6 +193,12 @@ class App_Main_Window(tk.Frame):
         self.submit_button =tk.Button(self, command = self.submit_choices, text = 'Submit Stats')
         self.submit_button.grid(row=8,column=6)
         
+    def on_exit(self):
+        pop_up = tk.Toplevel()
+        self.pop_up_app = App_Close_Overide(tk.Tk())
+        
+        pop_up.focus()      
+        pop_up.main_loop()
     def submit_choices(self):
         temp_writer(self.get_all())
         self.NAME_entry.delete(0 , tk.END)
@@ -218,7 +225,7 @@ class App_Main_Window(tk.Frame):
         self.STRIKES_entry.delete(0 , tk.END)
         self.TOT_SWINGS_entry.delete(0 , tk.END)
         
-            
+
     def get_all(self):
         return[self.NAME_var.get(),self.PA_var.get(),self.AB_var.get(),self.R_var.get(),self.SINGLE_var.get(),self.DOUBLE_var.get(),
                self.TRIPLE_var.get(),self.HR_var.get(), self.BB_var.get(), self.HBP_var.get(), self.KL_var.get(), self.KS_var.get(),
@@ -230,6 +237,7 @@ if __name__ == "__main__":
     
     root = tk.Tk()
     root.title("Offensive Stats Platform  v0.0.1 Pre-Alpha")
+    root.wm_protocol('WM_DELETE_WINDOW', func = on_exit)
     canvas = tk.Canvas(root, width = 150, height = 150)  
     canvas.grid(row=0)  
     if (system() == 'Darwin'):
@@ -239,6 +247,7 @@ if __name__ == "__main__":
     canvas.create_image(75, 75, image=img) 
     app = App_Main_Window(root)
     app.grid(row =1)
+  
 
 
 
