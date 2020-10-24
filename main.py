@@ -14,7 +14,14 @@ from time import sleep
 import pandas as pd
 from PIL import ImageTk,Image
 from platform import system
-      
+
+
+temp_df = pd.DataFrame(columns =['Player','PA', 'AB', 'R', '1B','2B', '3B','HR','BB','HBP',
+                                 'KL','KS','SB','CS','RBI','SAC_BUNT','SAC_FLY','DP','QUAB',
+                                 'HHB','PITCHES','STRIKES','TOT_SWINGS'])
+
+temp_df.to_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_temp.csv' , index = False)
+
 def on_exit():
     vari = tk.messagebox.askyesno('WARNING','Do you want to save all before closing?')
     if (vari  == True):
@@ -40,7 +47,16 @@ def submit_to_full():
     df_full = df_full.append(df_temp, ignore_index = True)
     df_full.to_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_full.csv', index = False)
 
+def temp_recall():
+    df = pd.read_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_temp.csv' )
 
+    row = df.iloc[(len(df.index)-1)]
+
+    df = df.drop(index = [(len(df.index)-1)])
+
+    df.to_csv(r'C:\Users\joedattoli\Documents\gamechartexcelsheets\counting_stats_temp.csv', index = False )
+    return row
+    
 def temp_writer(info):
     for i in range(1,len(info)):
         if (info[i] == ''):
@@ -191,14 +207,38 @@ class App_Main_Window(tk.Frame):
         self.TOT_SWINGS_entry.grid(row=8, column=3,padx=3)  
         
         self.submit_button =tk.Button(self, command = self.submit_choices, text = 'Submit Stats')
-        self.submit_button.grid(row=8,column=6)
+        self.submit_button.grid(row=8,column=6, padx = 6)
         
-    def on_exit(self):
-        pop_up = tk.Toplevel()
-        self.pop_up_app = App_Close_Overide(tk.Tk())
+        self.recall_button = tk.Button(self,command= self.recall_last_entry, text = 'Recall Last')
+        self.recall_button.grid(row=8,column=7, padx = 6)
         
-        pop_up.focus()      
-        pop_up.main_loop()
+    def recall_last_entry(self):
+        recall = temp_recall()
+
+        self.NAME_entry.insert(0 , recall[0])
+        self.PA_entry.insert(0 , recall[1])
+        self.AB_entry.insert(0 , recall[2])
+        self.R_entry.insert(0 , recall[3])
+        self.SINGLE_entry.insert(0 , recall[4])
+        self.DOUBLE_entry.insert(0 , recall[5])
+        self.TRIPLE_entry.insert(0 , recall[6])
+        self.HR_entry.insert(0 , recall[7])
+        self.BB_entry.insert(0 , recall[8])
+        self.HBP_entry.insert(0 , recall[9])
+        self.KL_entry.insert(0 , recall[10])
+        self.KS_entry.insert(0 , recall[11])
+        self.SB_entry.insert(0 , recall[12])
+        self.CS_entry.insert(0 , recall[13])
+        self.RBI_entry.insert(0 , recall[14])
+        self.SAC_entry.insert(0 , recall[15])
+        self.SACFLY_entry.insert(0 , recall[16])
+        self.DP_entry.insert(0 , recall[17])
+        self.QUAB_entry.insert(0 , recall[18])
+        self.HHB_entry.insert(0 , recall[19])
+        self.PITCHES_entry.insert(0 , recall[20])
+        self.STRIKES_entry.insert(0 , recall[21])
+        self.TOT_SWINGS_entry.insert(0 , recall[22])
+        
     def submit_choices(self):
         temp_writer(self.get_all())
         self.NAME_entry.delete(0 , tk.END)
